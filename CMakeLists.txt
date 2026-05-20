@@ -6,6 +6,14 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+# Export compile commands for IDEs
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+# Default Build Type
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Build type" FORCE)
+endif()
+
 # Standard compiler flags for production-grade shared library
 add_compile_options( -fPIC -Wall -Wextra -Werror -O2)
 
