@@ -1,6 +1,6 @@
 #include <string>
 
-#include "include/safe_queue.hh"
+#include <cpputils/safe_queue.hpp>
 
 namespace cpp_utils {
 // 模板类的显式实例化声明，用于分离编译

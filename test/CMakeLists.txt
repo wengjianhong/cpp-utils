@@ -1,24 +1,23 @@
-# GTest-based unit tests (aligned with parent project conventions)
-find_package(GTest REQUIRED CONFIG)
+# GTest unit tests for cpputils
 
-add_executable(cpp_utils_tests
-    test_safe_queue.cpp
-    test_thread_pool.cpp
+# Dependencies (minimum 1.14.0, aligned with qtrade)
+find_package(GTest 1.14.0 REQUIRED)
+
+# Source files
+file(GLOB_RECURSE CPPUTILS_TEST_SOURCES CONFIGURE_DEPENDS
+  "${CMAKE_CURRENT_SOURCE_DIR}/test_*.cpp"
 )
 
-# Same include layout as root: headers live under include/ (e.g. include/safe_queue.hh)
-target_include_directories(cpp_utils_tests PRIVATE ${CMAKE_SOURCE_DIR})
+# Build executable
+add_executable(cpputils_tests ${CPPUTILS_TEST_SOURCES})
 
-# Find dependencies
-find_package(GTest 1.16.1 EXACT REQUIRED)
-
-# Link dependencies
-target_link_libraries(cpp_utils_tests PRIVATE
-    cpp-utils
-    GTest::gtest
-    GTest::gtest_main
+# Link libraries (include paths propagated from cpputils)
+target_link_libraries(cpputils_tests PRIVATE
+  cpputils
+  GTest::gtest
+  GTest::gtest_main
 )
 
 # Discover and run tests
 include(GoogleTest)
-gtest_discover_tests(cpp_utils_tests)
+gtest_discover_tests(cpputils_tests)

@@ -17,8 +17,17 @@ BinPackParameters:                  false
 BinPackArguments:                   false
 Cpp11BracedListStyle:               true
 SpacesBeforeTrailingComments:       2
-SortIncludes:                       false
 
+# 头文件分组排序规则
+SortIncludes:                       true
+IncludeBlocks:                      Preserve
+IncludeCategories:
+  - Regex:           "^\""
+    Priority:        1
+  - Regex:           "^<qtrade/"
+    Priority:        2
+  - Regex:           ".*"
+    Priority:        3
 
 # ----------------------------------------------
 # Protobuf (proto): 直接复用 Google，仅改语言
