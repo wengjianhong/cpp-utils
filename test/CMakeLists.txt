@@ -1,23 +1,21 @@
-# GTest-based unit tests (aligned with parent project conventions)
-find_package(GTest REQUIRED CONFIG)
+# GTest unit tests for cpputils
 
-add_executable(cpputils_tests
-    test_safe_queue.cpp
-    test_thread_pool.cpp
-    test_database.cpp
-    test_config.cpp
+# Dependencies (minimum 1.14.0, aligned with qtrade)
+find_package(GTest 1.14.0 REQUIRED)
+
+# Source files
+file(GLOB_RECURSE CPPUTILS_TEST_SOURCES CONFIGURE_DEPENDS
+  "${CMAKE_CURRENT_SOURCE_DIR}/test_*.cpp"
 )
 
-# 通过链接 cpputils 获得 include 路径
+# Build executable
+add_executable(cpputils_tests ${CPPUTILS_TEST_SOURCES})
 
-# Find dependencies
-find_package(GTest 1.16.1 EXACT REQUIRED)
-
-# Link dependencies
+# Link libraries (include paths propagated from cpputils)
 target_link_libraries(cpputils_tests PRIVATE
-    cpputils
-    GTest::gtest
-    GTest::gtest_main
+  cpputils
+  GTest::gtest
+  GTest::gtest_main
 )
 
 # Discover and run tests

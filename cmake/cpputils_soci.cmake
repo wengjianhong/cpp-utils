@@ -1,27 +1,24 @@
-# ---------------------------------------------------------------------------
-# SOCI 可选依赖：find + 链接到 cpputils
-# 需在 add_library(cpputils ...) 之后 include
-# ---------------------------------------------------------------------------
+# Optional SOCI dependency for the database wrapper.
+# Include after add_library(cpputils ...); 
+# toggle via CPPUTILS_ENABLE_SOCI in root CMakeLists.txt.
+# Disable: cmake -DCPPUTILS_ENABLE_SOCI=OFF
 
-# SOCI 可选依赖：find + 链接到 cpputils
-option(CPPUTILS_ENABLE_SOCI "Build SOCI database wrapper" ON)
-
-if(CPPUTILS_ENABLE_SOCI)
-  find_library(SOCI_CORE_LIB soci_core REQUIRED)
-  find_library(SOCI_SQLITE3_LIB soci_sqlite3)
-  find_library(SOCI_MYSQL_LIB soci_mysql)
-  find_library(SOCI_POSTGRESQL_LIB soci_postgresql)
-
-  target_compile_definitions(cpputils PUBLIC CPPUTILS_WITH_SOCI=1)
-  target_link_libraries(cpputils PUBLIC ${SOCI_CORE_LIB} dl)
-
-  if(SOCI_SQLITE3_LIB)
-    target_link_libraries(cpputils PUBLIC ${SOCI_SQLITE3_LIB})
-  endif()
-  if(SOCI_MYSQL_LIB)
-    target_link_libraries(cpputils PUBLIC ${SOCI_MYSQL_LIB})
-  endif()
-  if(SOCI_POSTGRESQL_LIB)
-    target_link_libraries(cpputils PUBLIC ${SOCI_POSTGRESQL_LIB})
-  endif()
+if(NOT CPPUTILS_ENABLE_SOCI)
+  return()
 endif()
+
+# soci_core is required; backend drivers are linked only when found (tests use sqlite3)
+find_library(SOCI_CORE_LIB soci_core REQUIRED)
+find_library(SOCI_SQLITE3_LIB soci_sqlite3)
+find_library(SOCI_MYSQL_LIB soci_mysql)
+find_library(SOCI_POSTGRESQL_LIB soci_postgresql)
+
+# dl: SOCI loads backend .so at runtime based on the connection string
+target_link_libraries(cpputils PUBLIC ${SOCI_CORE_LIB} dl)
+
+# Link only backends found on this machine; a missing driver does not fail the build
+foreach(_backend IN ITEMS SOCI_SQLITE3_LIB SOCI_MYSQL_LIB SOCI_POSTGRESQL_LIB)
+  if(${_backend})
+    target_link_libraries(cpputils PUBLIC ${${_backend}})
+  endif()
+endforeach()
