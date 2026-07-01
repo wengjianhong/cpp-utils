@@ -4,7 +4,7 @@
 #include <chrono>
 #include <future>
 #include <iostream>
-#include "include/thread_pool.hh"
+#include "include/thread_pool.hpp"
 
 using namespace cpp_utils;
 using namespace std::chrono_literals;

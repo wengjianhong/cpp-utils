@@ -3,7 +3,7 @@
 #include <vector>
 #include <atomic>
 #include <numeric>
-#include "include/safe_queue.hh"
+#include "include/safe_queue.hpp"
 
 using namespace cpp_utils;
 
