@@ -1,6 +1,10 @@
 cmake_minimum_required(VERSION 3.22)
 project(cpp-utils LANGUAGES CXX)
 
+if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+  set(CMAKE_INSTALL_PREFIX "${CMAKE_CURRENT_SOURCE_DIR}/release" CACHE PATH "Install prefix" FORCE)
+endif()
+
 # C++ Standard configuration
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_EXTENSIONS OFF)
@@ -17,15 +21,10 @@ endif()
 # Standard compiler flags for production-grade shared library
 add_compile_options(-fPIC -Wall -Wextra -Werror -O2)
 
-option(CPPUTILS_ENABLE_SOCI "Build SOCI database wrapper" ON)
-
-# Collect all source files (include nested database/detail)
-file(GLOB_RECURSE SRC_FILES CONFIGURE_DEPENDS
+# Collect all source files under src/ (recursive)
+file(GLOB_RECURSE ALL_SRC_FILES CONFIGURE_DEPENDS
     "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/*/*.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/*/*/*.cpp"
 )
-set(ALL_SRC_FILES ${SRC_FILES})
 
 # Create shared library
 add_library(cpp-utils SHARED ${ALL_SRC_FILES})
@@ -41,33 +40,15 @@ find_package(Threads REQUIRED)
 target_link_libraries(cpp-utils PUBLIC Threads::Threads)
 #target_link_libraries(cpp-utils PUBLIC spdlog::spdlog)
 
-if(CPPUTILS_ENABLE_SOCI)
-    find_library(SOCI_CORE_LIB soci_core REQUIRED)
-    find_library(SOCI_SQLITE3_LIB soci_sqlite3)
-    find_library(SOCI_MYSQL_LIB soci_mysql)
-    find_library(SOCI_POSTGRESQL_LIB soci_postgresql)
-
-    target_compile_definitions(cpp-utils PUBLIC CPPUTILS_WITH_SOCI=1)
-    target_link_libraries(cpp-utils PUBLIC ${SOCI_CORE_LIB} dl)
-
-    if(SOCI_SQLITE3_LIB)
-        target_link_libraries(cpp-utils PUBLIC ${SOCI_SQLITE3_LIB})
-    endif()
-    if(SOCI_MYSQL_LIB)
-        target_link_libraries(cpp-utils PUBLIC ${SOCI_MYSQL_LIB})
-    endif()
-    if(SOCI_POSTGRESQL_LIB)
-        target_link_libraries(cpp-utils PUBLIC ${SOCI_POSTGRESQL_LIB})
-    endif()
-endif()
+# SOCI database dependencies
+include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/cpputils_soci.cmake)
 
 # Build output directories (clean and standard layout)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 
-# Install header files
-install(DIRECTORY include/ DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/release/include)
-# Install the library
-install(TARGETS cpp-utils LIBRARY DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/release/lib)
+# Install
+install(TARGETS cpp-utils LIBRARY DESTINATION lib)
+install(DIRECTORY include/ DESTINATION include)
 
 # Build test cases
 enable_testing()
