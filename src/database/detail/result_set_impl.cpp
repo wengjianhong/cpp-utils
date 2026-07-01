@@ -9,9 +9,7 @@ SociResultSet::SociResultSet(soci::rowset<soci::row>&& rowset)
 
 std::shared_ptr<const ColumnSchema> SociResultSet::Schema() const { return schema_; }
 
-std::size_t SociResultSet::column_count() const {
-  return schema_ ? schema_->size() : 0;
-}
+std::size_t SociResultSet::column_count() const { return schema_ ? schema_->size() : 0; }
 
 std::optional<Row> SociResultSet::Fetch() {
   if (it_ == end_) {

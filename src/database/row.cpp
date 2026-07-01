@@ -7,7 +7,7 @@
 namespace cpp_utils::database {
 
 Row::Row(const IResultSet* result_set, std::vector<Value> values)
-    : result_set_(result_set), values_(std::move(values)) {}
+  : result_set_(result_set), values_(std::move(values)) {}
 
 std::optional<std::size_t> Row::ResolveIndex(std::string_view name) const {
   if (result_set_ == nullptr) {

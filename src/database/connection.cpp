@@ -38,7 +38,7 @@ Error Connection::Connect() {
 
   try {
     impl_->session_ = std::make_unique<soci::session>(std::string(ToSociBackendName(impl_->options_.database_type)),
-                                                     impl_->options_.conn_string);
+                                                      impl_->options_.conn_string);
     impl_->last_error_.clear();
     return Error::kSuccess;
   } catch (const soci::soci_error& ex) {
@@ -79,7 +79,7 @@ Error Connection::Execute(const std::string& sql, ExecuteResult* out) {
 const std::string& Connection::LastError() const { return impl_->last_error_; }
 
 IConnection::Transaction::Transaction(IConnection* connection, std::unique_ptr<detail::TransactionImpl> impl)
-    : connection_(connection), impl_(std::move(impl)) {}
+  : connection_(connection), impl_(std::move(impl)) {}
 
 IConnection::Transaction::Transaction(Transaction&& other) noexcept = default;
 

@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.22)
-project(cpp-utils LANGUAGES CXX)
+project(cpputils LANGUAGES CXX)
 
 if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
   set(CMAKE_INSTALL_PREFIX "${CMAKE_CURRENT_SOURCE_DIR}/release" CACHE PATH "Install prefix" FORCE)
@@ -27,18 +27,18 @@ file(GLOB_RECURSE ALL_SRC_FILES CONFIGURE_DEPENDS
 )
 
 # Create shared library
-add_library(cpp-utils SHARED ${ALL_SRC_FILES})
+add_library(cpputils SHARED ${ALL_SRC_FILES})
 
 # include directories
-target_include_directories(cpp-utils PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_include_directories(cpputils PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
 # Find dependencies
 find_package(Threads REQUIRED)
 #find_package(spdlog 1.14.1 EXACT REQUIRED)
 
 # Link dependencies
-target_link_libraries(cpp-utils PUBLIC Threads::Threads)
-#target_link_libraries(cpp-utils PUBLIC spdlog::spdlog)
+target_link_libraries(cpputils PUBLIC Threads::Threads)
+#target_link_libraries(cpputils PUBLIC spdlog::spdlog)
 
 # SOCI database dependencies
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/cpputils_soci.cmake)
@@ -47,7 +47,7 @@ include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/cpputils_soci.cmake)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 
 # Install
-install(TARGETS cpp-utils LIBRARY DESTINATION lib)
+install(TARGETS cpputils LIBRARY DESTINATION lib)
 install(DIRECTORY include/ DESTINATION include)
 
 # Build test cases

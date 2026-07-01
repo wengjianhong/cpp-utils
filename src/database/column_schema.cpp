@@ -10,8 +10,6 @@ std::optional<std::size_t> ColumnSchema::IndexOf(std::string_view name) const {
   return it->second;
 }
 
-std::size_t ColumnSchema::size() const {
-  return names.size();
-}
+std::size_t ColumnSchema::size() const { return names.size(); }
 
 }  // namespace cpp_utils::database

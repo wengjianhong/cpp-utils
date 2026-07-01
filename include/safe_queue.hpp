@@ -7,12 +7,12 @@
 #ifndef BASE_COMMON_SAFE_QUEUE_H_
 #define BASE_COMMON_SAFE_QUEUE_H_
 
+#include <condition_variable>
+#include <cstddef>
 #include <deque>
 #include <mutex>
-#include <utility>
-#include <cstddef>
 #include <stdexcept>
-#include <condition_variable>
+#include <utility>
 
 namespace cpp_utils {
 

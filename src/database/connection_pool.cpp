@@ -21,7 +21,7 @@ struct PoolState {
 class LeasedConnection final : public IConnection {
  public:
   LeasedConnection(std::shared_ptr<PoolState> state, std::size_t pos)
-      : state_(std::move(state)), pos_(pos), valid_(true) {}
+    : state_(std::move(state)), pos_(pos), valid_(true) {}
 
   ~LeasedConnection() override {
     if (valid_ && state_ && state_->pool) {
@@ -92,7 +92,7 @@ class ConnectionPool final : public IConnectionPool {
       auto state = std::make_shared<PoolState>();
       state->options = options;
       state->params = std::make_unique<soci::connection_parameters>(
-          std::string(ToSociBackendName(options.connection.database_type)), options.connection.conn_string);
+        std::string(ToSociBackendName(options.connection.database_type)), options.connection.conn_string);
       for (const auto& [key, value] : options.connection.soci_options) {
         state->params->set_option(key.c_str(), value);
       }
@@ -128,9 +128,7 @@ class ConnectionPool final : public IConnectionPool {
 
     std::size_t pos = 0;
     const unsigned int lease_timeout_ms =
-        state_->options.lease_timeout > 0
-            ? static_cast<unsigned int>(state_->options.lease_timeout * 1000)
-            : 0;
+      state_->options.lease_timeout > 0 ? static_cast<unsigned int>(state_->options.lease_timeout * 1000) : 0;
     if (!state_->pool->try_lease(pos, lease_timeout_ms)) {
       last_error_ = "no available connection in pool";
       return nullptr;

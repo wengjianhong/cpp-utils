@@ -2,9 +2,7 @@
 
 namespace cpp_utils::database {
 
-bool Value::is_null() const {
-  return type == Type::kNull;
-}
+bool Value::is_null() const { return type == Type::kNull; }
 
 std::optional<std::int64_t> Value::as_int64() const {
   if (type == Type::kInt64) {

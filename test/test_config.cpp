@@ -26,8 +26,7 @@ TEST(DatabaseConfigTest, PostgreSqlUnixConnString) {
   config.database_name = "nasdb";
 
   const cpp_utils::database::ConnectionOptions opts(config);
-  EXPECT_EQ(opts.conn_string,
-            "host=/var/run/postgresql port=5432 dbname=nasdb user=postgres sslmode=disable ");
+  EXPECT_EQ(opts.conn_string, "host=/var/run/postgresql port=5432 dbname=nasdb user=postgres sslmode=disable ");
 }
 
 TEST(DatabaseConfigTest, MySqlConnectTimeout) {
@@ -45,8 +44,7 @@ TEST(DatabaseConfigTest, OracleConnectTimeout) {
   config.connect_timeout = 5;
 
   const cpp_utils::database::ConnectionOptions opts(config);
-  EXPECT_EQ(opts.conn_string,
-            "host=127.0.0.1 port=1521 service=ORCL user=scott password= connect_timeout=5");
+  EXPECT_EQ(opts.conn_string, "host=127.0.0.1 port=1521 service=ORCL user=scott password= connect_timeout=5");
 }
 
 TEST(DatabaseConfigTest, SqliteBusyTimeout) {
