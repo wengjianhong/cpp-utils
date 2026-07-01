@@ -7,9 +7,9 @@
 #ifndef CPP_UTILS_DATABASE_CONNECTION_HPP_
 #define CPP_UTILS_DATABASE_CONNECTION_HPP_
 
-#include "include/database/config.hpp"
-#include "include/database/error.hpp"
-#include "include/database/result_set.hpp"
+#include <cpputils/database/config.hpp>
+#include <cpputils/database/error.hpp>
+#include <cpputils/database/result_set.hpp>
 
 #include <memory>
 #include <string>

@@ -1,4 +1,4 @@
-#include "include/database/config.hpp"
+#include <cpputils/database/config.hpp>
 
 #include <sstream>
 #include <string>

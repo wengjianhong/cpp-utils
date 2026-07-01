@@ -7,8 +7,8 @@
 #ifndef CPP_UTILS_DATABASE_RESULT_SET_HPP_
 #define CPP_UTILS_DATABASE_RESULT_SET_HPP_
 
-#include "include/database/column_schema.hpp"
-#include "include/database/row.hpp"
+#include <cpputils/database/column_schema.hpp>
+#include <cpputils/database/row.hpp>
 
 #include <cstdint>
 #include <memory>

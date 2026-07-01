@@ -6,7 +6,7 @@
 #ifndef CPP_UTILS_DATABASE_CONFIG_HPP_
 #define CPP_UTILS_DATABASE_CONFIG_HPP_
 
-#include "include/database/types.hpp"
+#include <cpputils/database/types.hpp>
 
 #include <cstddef>
 #include <ctime>

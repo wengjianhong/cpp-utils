@@ -1,6 +1,6 @@
-#include "include/database/row.hpp"
+#include <cpputils/database/row.hpp>
 
-#include "include/database/result_set.hpp"
+#include <cpputils/database/result_set.hpp>
 
 #include <utility>
 

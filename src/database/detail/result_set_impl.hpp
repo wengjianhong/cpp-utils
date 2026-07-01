@@ -1,7 +1,7 @@
 #ifndef CPP_UTILS_DATABASE_DETAIL_RESULT_SET_IMPL_HPP_
 #define CPP_UTILS_DATABASE_DETAIL_RESULT_SET_IMPL_HPP_
 
-#include "include/database/result_set.hpp"
+#include <cpputils/database/result_set.hpp>
 
 #include <soci/row.h>
 #include <soci/rowset.h>

@@ -6,9 +6,9 @@
 #ifndef CPP_UTILS_DATABASE_CONNECTION_POOL_HPP_
 #define CPP_UTILS_DATABASE_CONNECTION_POOL_HPP_
 
-#include "include/database/config.hpp"
-#include "include/database/connection.hpp"
-#include "include/database/error.hpp"
+#include <cpputils/database/config.hpp>
+#include <cpputils/database/connection.hpp>
+#include <cpputils/database/error.hpp>
 
 #include <memory>
 

@@ -1,4 +1,4 @@
-#include "include/safe_queue.hpp"
+#include <cpputils/safe_queue.hpp>
 
 #include <atomic>
 #include <gtest/gtest.h>

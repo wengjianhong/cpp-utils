@@ -8,8 +8,7 @@ add_executable(cpputils_tests
     test_config.cpp
 )
 
-# Same include layout as root: headers live under include/
-target_include_directories(cpputils_tests PRIVATE ${CMAKE_SOURCE_DIR})
+# 通过链接 cpputils 获得 include 路径
 
 # Find dependencies
 find_package(GTest 1.16.1 EXACT REQUIRED)

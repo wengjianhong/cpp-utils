@@ -1,6 +1,6 @@
-#include "include/database/connection_pool.hpp"
+#include <cpputils/database/connection_pool.hpp>
 
-#include "include/database/types.hpp"
+#include <cpputils/database/types.hpp>
 #include "src/database/detail/soci_helper.hpp"
 
 #include <soci/connection-pool.h>

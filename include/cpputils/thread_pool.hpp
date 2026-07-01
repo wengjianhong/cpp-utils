@@ -7,7 +7,7 @@
 #ifndef BASE_COMMON_THREAD_POOL_THREAD_POOL_H_
 #define BASE_COMMON_THREAD_POOL_THREAD_POOL_H_
 
-#include "include/safe_queue.hpp"
+#include <cpputils/safe_queue.hpp>
 #include <atomic>
 #include <cerrno>
 #include <condition_variable>

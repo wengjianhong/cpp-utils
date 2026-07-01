@@ -1,4 +1,4 @@
-#include "include/database/column_schema.hpp"
+#include <cpputils/database/column_schema.hpp>
 
 namespace cpp_utils::database {
 

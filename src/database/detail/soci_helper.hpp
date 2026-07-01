@@ -1,10 +1,10 @@
 #ifndef CPP_UTILS_DATABASE_DETAIL_SOCI_HELPER_HPP_
 #define CPP_UTILS_DATABASE_DETAIL_SOCI_HELPER_HPP_
 
-#include "include/database/column_schema.hpp"
-#include "include/database/error.hpp"
-#include "include/database/result_set.hpp"
-#include "include/database/value.hpp"
+#include <cpputils/database/column_schema.hpp>
+#include <cpputils/database/error.hpp>
+#include <cpputils/database/result_set.hpp>
+#include <cpputils/database/value.hpp>
 
 #include <soci/soci.h>
 

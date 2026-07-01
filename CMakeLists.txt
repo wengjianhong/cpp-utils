@@ -1,9 +1,6 @@
 cmake_minimum_required(VERSION 3.22)
 project(cpputils LANGUAGES CXX)
 
-if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
-  set(CMAKE_INSTALL_PREFIX "${CMAKE_CURRENT_SOURCE_DIR}/release" CACHE PATH "Install prefix" FORCE)
-endif()
 
 # C++ Standard configuration
 set(CMAKE_CXX_STANDARD 20)
@@ -29,8 +26,11 @@ file(GLOB_RECURSE ALL_SRC_FILES CONFIGURE_DEPENDS
 # Create shared library
 add_library(cpputils SHARED ${ALL_SRC_FILES})
 
-# include directories
-target_include_directories(cpputils PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+# include：<cpputils/...>；src/ 下 detail 头文件仅编译期使用
+target_include_directories(cpputils
+  PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include
+  PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}
+)
 
 # Find dependencies
 find_package(Threads REQUIRED)
@@ -46,9 +46,15 @@ include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/cpputils_soci.cmake)
 # Build output directories (clean and standard layout)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 
-# Install
-install(TARGETS cpputils LIBRARY DESTINATION lib)
-install(DIRECTORY include/ DESTINATION include)
+# Install（默认 prefix 如 /usr/local），可用 -DCMAKE_INSTALL_PREFIX= 覆盖
+include(GNUInstallDirs)
+install(TARGETS cpputils
+  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE
+              GROUP_READ GROUP_EXECUTE
+              WORLD_READ WORLD_EXECUTE
+)
+install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 
 # Build test cases
 enable_testing()

@@ -7,7 +7,7 @@
 #ifndef CPP_UTILS_DATABASE_ROW_HPP_
 #define CPP_UTILS_DATABASE_ROW_HPP_
 
-#include "include/database/value.hpp"
+#include <cpputils/database/value.hpp>
 
 #include <cstddef>
 #include <optional>
