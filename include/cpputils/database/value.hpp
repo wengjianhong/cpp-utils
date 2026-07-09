@@ -25,14 +25,10 @@ struct Value {
     kDouble = 2,
     ///< 字符串型
     kString = 3,
-    ///< 布尔型
-    kBool = 4,
   };
 
   ///< 当前类型标签
   Type type = Type::kNull;
-  ///< kBool 载荷
-  bool bool_value = false;
   ///< kInt64 载荷
   std::int64_t int64_value = 0;
   ///< kDouble 载荷
@@ -52,11 +48,7 @@ struct Value {
   /// @return 值；无法转换或 NULL 时 nullopt
   [[nodiscard]] std::optional<double> as_double() const;
 
-  /// @brief 转为 bool（kBool；kInt64 非零为 true）
-  /// @return 值；无法转换或 NULL 时 nullopt
-  [[nodiscard]] std::optional<bool> as_bool() const;
-
-  /// @brief 转为字符串（含数值/布尔格式化）
+  /// @brief 转为字符串（含数值格式化）
   /// @return 字符串；NULL 时 nullopt
   [[nodiscard]] std::optional<std::string> as_string() const;
 };

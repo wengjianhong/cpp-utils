@@ -2,8 +2,6 @@
 
 #include "src/database/detail/result_set_impl.hpp"
 
-#include <utility>
-
 namespace cpp_utils::database::detail {
 
 Value FromSociField(const soci::row& row, std::size_t index) {
