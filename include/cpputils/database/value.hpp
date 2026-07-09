@@ -48,7 +48,7 @@ struct Value {
   /// @return 值；无法转换或 NULL 时 nullopt
   [[nodiscard]] std::optional<double> as_double() const;
 
-  /// @brief 转为字符串（含数值格式化）
+  /// @brief 转为字符串（int/double 格式化成字符串后返回）
   /// @return 字符串；NULL 时 nullopt
   [[nodiscard]] std::optional<std::string> as_string() const;
 };
