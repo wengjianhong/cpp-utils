@@ -18,8 +18,10 @@ namespace cpp_utils::database {
 
 /// @brief 结果集列元数据（列名与下标映射）
 struct ColumnSchema {
-  std::vector<std::string> names;                                   ///< 列名列表，下标即列索引
-  std::unordered_map<std::string_view, std::size_t> name_to_index;  ///< 列名 -> 索引
+  ///< 列名列表，下标即列索引
+  std::vector<std::string> names;
+  ///< 列名 -> 索引
+  std::unordered_map<std::string_view, std::size_t> name_to_index;
 
   /// @brief 按列名查找索引
   /// @param name 列名

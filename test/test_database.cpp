@@ -1,4 +1,5 @@
-#include <cpputils/database/database.hpp>
+#include <cpputils/database/connection.hpp>
+#include <cpputils/database/connection_pool.hpp>
 
 #include <gtest/gtest.h>
 
@@ -15,19 +16,18 @@ CREATE TABLE kv_store (
 }  // namespace
 
 TEST(DatabaseConnectionTest, SqliteConnectAndQuery) {
-  cpp_utils::database::ConnectionOptions opts;
+  cpp_utils::database::ConnectionConfig opts;
   opts.database_type = cpp_utils::database::DatabaseType::kSqlite3;
   opts.conn_string = "dbname=:memory:";
 
-  cpp_utils::database::Connection connection(opts);
-  ASSERT_EQ(connection.Connect(), cpp_utils::database::Error::kSuccess);
+  auto connection = cpp_utils::database::CreateConnection(opts);
+  ASSERT_NE(connection, nullptr);
+  ASSERT_TRUE(connection->Connect());
 
-  ASSERT_EQ(connection.Execute(kSchemaSql), cpp_utils::database::Error::kSuccess);
-  ASSERT_EQ(connection.Execute("INSERT INTO kv_store(config_key, config_value, version) VALUES('k1', 'v1', 1)"),
-            cpp_utils::database::Error::kSuccess);
+  ASSERT_TRUE(connection->Execute(kSchemaSql));
+  ASSERT_TRUE(connection->Execute("INSERT INTO kv_store(config_key, config_value, version) VALUES('k1', 'v1', 1)"));
 
-  auto [query_err, result] = connection.Query("SELECT config_key, config_value, version FROM kv_store");
-  ASSERT_EQ(query_err, cpp_utils::database::Error::kSuccess);
+  auto result = connection->Query("SELECT config_key, config_value, version FROM kv_store");
   ASSERT_NE(result, nullptr);
 
   auto row = result->Fetch();
@@ -39,24 +39,22 @@ TEST(DatabaseConnectionTest, SqliteConnectAndQuery) {
 }
 
 TEST(DatabaseConnectionTest, TransactionRollback) {
-  cpp_utils::database::ConnectionOptions opts;
+  cpp_utils::database::ConnectionConfig opts;
   opts.database_type = cpp_utils::database::DatabaseType::kSqlite3;
   opts.conn_string = "dbname=:memory:";
 
-  cpp_utils::database::Connection connection(opts);
-  ASSERT_EQ(connection.Connect(), cpp_utils::database::Error::kSuccess);
-  ASSERT_EQ(connection.Execute(kSchemaSql), cpp_utils::database::Error::kSuccess);
-  ASSERT_EQ(connection.Execute("INSERT INTO kv_store(config_key, config_value, version) VALUES('k1', 'v1', 1)"),
-            cpp_utils::database::Error::kSuccess);
+  auto connection = cpp_utils::database::CreateConnection(opts);
+  ASSERT_NE(connection, nullptr);
+  ASSERT_TRUE(connection->Connect());
+  ASSERT_TRUE(connection->Execute(kSchemaSql));
+  ASSERT_TRUE(connection->Execute("INSERT INTO kv_store(config_key, config_value, version) VALUES('k1', 'v1', 1)"));
 
-  auto [begin_err, tx] = connection.BeginTransaction();
-  ASSERT_EQ(begin_err, cpp_utils::database::Error::kSuccess);
-  ASSERT_EQ(connection.Execute("INSERT INTO kv_store(config_key, config_value, version) VALUES('k2', 'v2', 1)"),
-            cpp_utils::database::Error::kSuccess);
-  ASSERT_EQ(tx.Rollback(), cpp_utils::database::Error::kSuccess);
+  auto tx = connection->BeginTransaction();
+  ASSERT_TRUE(tx.has_value());
+  ASSERT_TRUE(connection->Execute("INSERT INTO kv_store(config_key, config_value, version) VALUES('k2', 'v2', 1)"));
+  ASSERT_TRUE(tx->Rollback());
 
-  auto [query_err, result] = connection.Query("SELECT config_key FROM kv_store");
-  ASSERT_EQ(query_err, cpp_utils::database::Error::kSuccess);
+  auto result = connection->Query("SELECT config_key FROM kv_store");
   ASSERT_NE(result, nullptr);
 
   std::size_t row_count = 0;
@@ -67,10 +65,10 @@ TEST(DatabaseConnectionTest, TransactionRollback) {
 }
 
 TEST(DatabaseConnectionTest, NotConnectedReturnsError) {
-  cpp_utils::database::Connection connection(cpp_utils::database::ConnectionOptions{});
-  auto [query_err, result] = connection.Query("SELECT 1");
-  EXPECT_EQ(query_err, cpp_utils::database::Error::kNotConnected);
-  EXPECT_EQ(result, nullptr);
+  auto connection = cpp_utils::database::CreateConnection(cpp_utils::database::ConnectionConfig{});
+  ASSERT_NE(connection, nullptr);
+  EXPECT_EQ(connection->Query("SELECT 1"), nullptr);
+  EXPECT_FALSE(connection->LastError().Ok());
 }
 
 TEST(DatabaseConnectionPoolTest, AcquireAndQuery) {
@@ -78,37 +76,35 @@ TEST(DatabaseConnectionPoolTest, AcquireAndQuery) {
   sqlite_cfg.database_path = ":memory:";
 
   auto pool = cpp_utils::database::CreateConnectionPool();
-  ASSERT_EQ(
-    pool->Open(cpp_utils::database::ConnectionPoolOptions{cpp_utils::database::ConnectionOptions{sqlite_cfg}, 2}),
-    cpp_utils::database::Error::kSuccess);
+  ASSERT_TRUE(pool->Open(cpp_utils::database::ConnectionPoolConfig{cpp_utils::database::ConnectionConfig{sqlite_cfg}, 2}));
 
   auto conn = pool->Acquire();
   ASSERT_NE(conn, nullptr);
-  ASSERT_EQ(conn->Execute(kSchemaSql), cpp_utils::database::Error::kSuccess);
+  ASSERT_TRUE(conn->Execute(kSchemaSql));
 
-  auto [query_err, result] = conn->Query("SELECT 1 AS value");
-  ASSERT_EQ(query_err, cpp_utils::database::Error::kSuccess);
+  auto result = conn->Query("SELECT 1 AS value");
   ASSERT_NE(result, nullptr);
   EXPECT_TRUE(result->Fetch().has_value());
 }
 
 TEST(DatabaseConnectionTest, StreamingLargeResultUsesConstantMemory) {
-  cpp_utils::database::ConnectionOptions opts;
+  cpp_utils::database::ConnectionConfig opts;
   opts.database_type = cpp_utils::database::DatabaseType::kSqlite3;
   opts.conn_string = "dbname=:memory:";
 
-  cpp_utils::database::Connection connection(opts);
-  ASSERT_EQ(connection.Connect(), cpp_utils::database::Error::kSuccess);
-  ASSERT_EQ(connection.Execute(kSchemaSql), cpp_utils::database::Error::kSuccess);
+  auto connection = cpp_utils::database::CreateConnection(opts);
+  ASSERT_NE(connection, nullptr);
+  ASSERT_TRUE(connection->Connect());
+  ASSERT_TRUE(connection->Execute(kSchemaSql));
 
   for (int i = 0; i < 100; ++i) {
     const std::string sql =
       "INSERT INTO kv_store(config_key, config_value, version) VALUES('k" + std::to_string(i) + "', 'v', 1)";
-    ASSERT_EQ(connection.Execute(sql), cpp_utils::database::Error::kSuccess);
+    ASSERT_TRUE(connection->Execute(sql));
   }
 
-  auto [query_err, result] = connection.Query("SELECT config_key FROM kv_store");
-  ASSERT_EQ(query_err, cpp_utils::database::Error::kSuccess);
+  auto result = connection->Query("SELECT config_key FROM kv_store");
+  ASSERT_NE(result, nullptr);
 
   std::size_t count = 0;
   while (result->Fetch().has_value()) {

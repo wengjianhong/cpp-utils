@@ -2,8 +2,10 @@
 
 namespace cpp_utils::database {
 
-std::string_view ToSociBackendName(DatabaseType type) noexcept {
+std::string_view GetDatabaseTypeName(DatabaseType type) noexcept {
   switch (type) {
+    case DatabaseType::kUnknown:
+      return "";
     case DatabaseType::kMySql:
       return "mysql";
     case DatabaseType::kSqlite3:

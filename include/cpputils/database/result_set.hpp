@@ -10,16 +10,11 @@
 #include <cpputils/database/column_schema.hpp>
 #include <cpputils/database/row.hpp>
 
-#include <cstdint>
+#include <cstddef>
 #include <memory>
 #include <optional>
 
 namespace cpp_utils::database {
-
-/// @brief 非查询语句执行结果
-struct ExecuteResult {
-  std::uint64_t affected_rows = 0;  ///< 受影响行数
-};
 
 /// @brief 流式结果集：调用方逐行 Fetch
 class IResultSet {

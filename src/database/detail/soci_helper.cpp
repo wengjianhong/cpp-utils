@@ -55,31 +55,36 @@ std::shared_ptr<ColumnSchema> BuildColumnSchema(const soci::row& row) {
   return schema;
 }
 
-Error ExecuteSql(soci::session& session, const std::string& sql, ExecuteResult* out, std::string& last_error) {
+bool ExecuteSql(soci::session& session,
+                const std::string& sql,
+                std::int64_t* affected_rows,
+                DbError& last_error,
+                DatabaseType database_type) {
   try {
     soci::statement st = (session.prepare << sql);
     st.execute(true);
-    if (out != nullptr) {
-      out->affected_rows = static_cast<std::uint64_t>(st.get_affected_rows());
+    if (affected_rows != nullptr) {
+      *affected_rows = st.get_affected_rows();
     }
-    last_error.clear();
-    return Error::kSuccess;
+    last_error.Clear();
+    return true;
   } catch (const soci::soci_error& ex) {
-    last_error = ex.what();
-    return Error::kExecuteFailed;
+    SetDbErrorFromSoci(last_error, database_type, ex);
+    return false;
   }
 }
 
-std::pair<Error, std::unique_ptr<IResultSet>> QuerySql(soci::session& session,
-                                                       const std::string& sql,
-                                                       std::string& last_error) {
+std::unique_ptr<IResultSet> QuerySql(soci::session& session,
+                                     const std::string& sql,
+                                     DbError& last_error,
+                                     DatabaseType database_type) {
   try {
     soci::rowset<soci::row> rs = (session.prepare << sql);
-    last_error.clear();
-    return {Error::kSuccess, std::make_unique<SociResultSet>(std::move(rs))};
+    last_error.Clear();
+    return std::make_unique<SociResultSet>(std::move(rs));
   } catch (const soci::soci_error& ex) {
-    last_error = ex.what();
-    return {Error::kQueryFailed, nullptr};
+    SetDbErrorFromSoci(last_error, database_type, ex);
+    return nullptr;
   }
 }
 

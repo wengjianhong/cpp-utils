@@ -10,19 +10,26 @@
 
 namespace cpp_utils::database {
 
-/// @brief 支持的数据库类型（对应 SOCI backend 名称）
+/// @brief 支持的数据库类型
 enum class DatabaseType {
-  kMySql,       ///< MySQL
-  kSqlite3,     ///< SQLite3
-  kPostgreSql,  ///< PostgreSQL
-  kOracle,      ///< Oracle
-  kOdbc,        ///< ODBC 通用驱动
+  ///< 未知
+  kUnknown = 0,
+  ///< MySQL
+  kMySql = 1,
+  ///< SQLite3
+  kSqlite3 = 2,
+  ///< PostgreSQL
+  kPostgreSql = 3,
+  ///< Oracle
+  kOracle = 4,
+  ///< ODBC 通用驱动
+  kOdbc = 5,
 };
 
-/// @brief 将 DatabaseType 转换为 SOCI backend 字符串
+/// @brief 获取 DatabaseType 对应的名称字符串
 /// @param type 数据库类型
-/// @return SOCI 约定的 backend 名称；未知值回退 "sqlite3"
-[[nodiscard]] std::string_view ToSociBackendName(DatabaseType type) noexcept;
+/// @return 类型名称（如 "mysql"、"sqlite3"）；未知值返回空字符串
+[[nodiscard]] std::string_view GetDatabaseTypeName(DatabaseType type) noexcept;
 
 }  // namespace cpp_utils::database
 

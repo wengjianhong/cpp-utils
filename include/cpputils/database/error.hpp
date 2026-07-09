@@ -1,24 +1,34 @@
 /// @file      error.hpp
-/// @brief     数据库操作结果码
-/// @details   与 SOCI / 具体驱动解耦，供 Connection 与 Pool 统一返回
+/// @brief     数据库错误详情（SOCI / 驱动原文，不含自定义错误码）
+/// @details   cpputils 仅透传底层错误信息；成败由 API 返回值（bool / optional / nullptr）表达
 /// @author    wengjianhong
-/// @date      2026-06-28
+/// @date      2026-07-09
 /// @copyright CC BY-NC-SA 4.0
 #ifndef CPP_UTILS_DATABASE_ERROR_HPP_
 #define CPP_UTILS_DATABASE_ERROR_HPP_
 
+#include <cpputils/database/types.hpp>
+
+#include <string>
+
 namespace cpp_utils::database {
 
-/// @brief 数据库操作结果码
-enum class Error {
-  kSuccess = 0,            ///< 成功
-  kInvalidArgument = 1,    ///< 参数非法
-  kNotConnected = 2,       ///< 未连接
-  kConnectFailed = 3,      ///< 连接失败
-  kQueryFailed = 4,        ///< 查询失败
-  kExecuteFailed = 5,      ///< 执行失败
-  kTransactionFailed = 6,  ///< 事务提交/回滚失败
-  kNotFound = 7,           ///< 资源不存在
+/// @brief 数据库操作错误详情
+struct DbError {
+  ///< 驱动原生错误码；0 表示无
+  int native_code = 0;
+  ///< 数据库类型
+  DatabaseType database_type = DatabaseType::kUnknown;
+  ///< 完整错误描述
+  std::string message;
+  ///< PostgreSQL 等数据库的标准错误码；空表示未提供
+  std::string sqlstate;
+
+  /// @brief 是否无错误
+  [[nodiscard]] bool Ok() const noexcept;
+
+  /// @brief 重置为无错误状态
+  void Clear() noexcept;
 };
 
 }  // namespace cpp_utils::database

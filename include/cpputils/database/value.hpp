@@ -17,18 +17,28 @@ namespace cpp_utils::database {
 struct Value {
   /// @brief 值类型标签
   enum class Type {
-    kNull,    ///< SQL NULL
-    kInt64,   ///< 64 位整数型
-    kDouble,  ///< 浮点型
-    kString,  ///< 字符串型
-    kBool,    ///< 布尔型
+    ///< SQL NULL
+    kNull = 0,
+    ///< 64 位整数型
+    kInt64 = 1,
+    ///< 浮点型
+    kDouble = 2,
+    ///< 字符串型
+    kString = 3,
+    ///< 布尔型
+    kBool = 4,
   };
 
-  Type type = Type::kNull;       ///< 当前类型标签
-  bool bool_value = false;       ///< kBool 载荷
-  std::int64_t int64_value = 0;  ///< kInt64 载荷
-  double double_value = 0.0;     ///< kDouble 载荷
-  std::string string_value;      ///< kString 载荷
+  ///< 当前类型标签
+  Type type = Type::kNull;
+  ///< kBool 载荷
+  bool bool_value = false;
+  ///< kInt64 载荷
+  std::int64_t int64_value = 0;
+  ///< kDouble 载荷
+  double double_value = 0.0;
+  ///< kString 载荷
+  std::string string_value;
 
   /// @brief 是否为 NULL
   /// @return true 表示 kNull

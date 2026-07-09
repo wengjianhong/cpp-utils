@@ -62,25 +62,25 @@ std::string BuildConnString(const cpp_utils::database::OracleConfig& config) {
 
 namespace cpp_utils::database {
 
-ConnectionOptions::ConnectionOptions(const SqliteConfig& config)
+ConnectionConfig::ConnectionConfig(const SqliteConfig& config)
   : database_type(DatabaseType::kSqlite3), conn_string(BuildConnString(config)), soci_options(config.soci_options) {
   if (config.busy_timeout > 0) {
     soci_options["sqlite3.busy_timeout"] = std::to_string(config.busy_timeout * 1000);
   }
 }
 
-ConnectionOptions::ConnectionOptions(const MySqlConfig& config)
+ConnectionConfig::ConnectionConfig(const MySqlConfig& config)
   : database_type(DatabaseType::kMySql), conn_string(BuildConnString(config)), soci_options(config.soci_options) {}
 
-ConnectionOptions::ConnectionOptions(const PostgreSqlConfig& config)
+ConnectionConfig::ConnectionConfig(const PostgreSqlConfig& config)
   : database_type(DatabaseType::kPostgreSql), conn_string(BuildConnString(config)), soci_options(config.soci_options) {}
 
-ConnectionOptions::ConnectionOptions(const OracleConfig& config)
+ConnectionConfig::ConnectionConfig(const OracleConfig& config)
   : database_type(DatabaseType::kOracle), conn_string(BuildConnString(config)), soci_options(config.soci_options) {}
 
-ConnectionPoolOptions::ConnectionPoolOptions(ConnectionOptions connection) : connection(std::move(connection)) {}
+ConnectionPoolConfig::ConnectionPoolConfig(ConnectionConfig connection) : connection(std::move(connection)) {}
 
-ConnectionPoolOptions::ConnectionPoolOptions(ConnectionOptions connection, std::size_t pool_size)
+ConnectionPoolConfig::ConnectionPoolConfig(ConnectionConfig connection, std::size_t pool_size)
   : pool_size(pool_size), connection(std::move(connection)) {}
 
 }  // namespace cpp_utils::database

@@ -12,7 +12,6 @@
 #include <cstddef>
 #include <optional>
 #include <string_view>
-#include <utility>
 #include <vector>
 
 namespace cpp_utils::database {
