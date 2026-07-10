@@ -1,14 +1,14 @@
-/// @file      types.hpp
+/// @file      database_types.hpp
 /// @brief     数据库模块公共类型（DatabaseType 等）
 /// @author    wengjianhong
 /// @date      2026-06-28
 /// @copyright CC BY-NC-SA 4.0
-#ifndef CPP_UTILS_DATABASE_TYPES_HPP_
-#define CPP_UTILS_DATABASE_TYPES_HPP_
+#ifndef CPP_UTILS_DATABASE_DATABASE_TYPES_HPP_
+#define CPP_UTILS_DATABASE_DATABASE_TYPES_HPP_
 
 #include <string_view>
 
-namespace cpp_utils::database {
+namespace cpputils::database {
 
 /// @brief 支持的数据库类型
 enum class DatabaseType {
@@ -31,6 +31,6 @@ enum class DatabaseType {
 /// @return 类型名称（如 "mysql"、"sqlite3"）；未知值返回空字符串
 [[nodiscard]] std::string_view GetDatabaseTypeName(DatabaseType type) noexcept;
 
-}  // namespace cpp_utils::database
+}  // namespace cpputils::database
 
-#endif  // CPP_UTILS_DATABASE_TYPES_HPP_
+#endif  // CPP_UTILS_DATABASE_DATABASE_TYPES_HPP_

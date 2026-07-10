@@ -6,17 +6,17 @@
 #ifndef CPP_UTILS_DATABASE_CONFIG_HPP_
 #define CPP_UTILS_DATABASE_CONFIG_HPP_
 
-#include <cpputils/database/types.hpp>
+#include <cpputils/database/database_types.hpp>
 
 #include <cstddef>
 #include <ctime>
 #include <map>
 #include <string>
 
-namespace cpp_utils::database {
+namespace cpputils::database {
 
 /// @brief PostgreSQL 连接方式
-enum class PostgreSqlConnectionType {
+enum class ConnectionType {
   ///< TCP
   kTcp = 0,
   ///< Unix socket
@@ -72,7 +72,7 @@ struct PostgreSqlConfig {
   ///< 透传 SOCI session 选项
   std::map<std::string, std::string> soci_options;
   ///< 连接方式
-  PostgreSqlConnectionType connection_type = PostgreSqlConnectionType::kTcp;
+  ConnectionType connection_type = ConnectionType::kTcp;
 };
 
 /// @brief Oracle 连接配置
@@ -142,6 +142,6 @@ struct ConnectionPoolConfig {
   ConnectionPoolConfig(ConnectionConfig connection, std::size_t pool_size);
 };
 
-}  // namespace cpp_utils::database
+}  // namespace cpputils::database
 
 #endif  // CPP_UTILS_DATABASE_CONFIG_HPP_

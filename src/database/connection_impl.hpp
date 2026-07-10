@@ -4,9 +4,8 @@
 #include <cpputils/database/connection.hpp>
 
 #include <memory>
-#include <optional>
 
-namespace cpp_utils::database {
+namespace cpputils::database {
 
 class ConnectionImpl;
 
@@ -26,16 +25,15 @@ class Connection final : public IConnection {
   [[nodiscard]] bool IsConnected() const override;
   [[nodiscard]] std::unique_ptr<IResultSet> Query(const std::string& sql) override;
   [[nodiscard]] bool Execute(const std::string& sql, std::int64_t* affected_rows = nullptr) override;
-  [[nodiscard]] const DbError& LastError() const override;
-  [[nodiscard]] std::optional<Transaction> BeginTransaction() override;
-
- protected:
-  void SetLastError(DbError error) override;
+  [[nodiscard]] const DatabaseError& LastError() const override;
+  [[nodiscard]] bool BeginTransaction() override;
+  [[nodiscard]] bool CommitTransaction() override;
+  [[nodiscard]] bool RollbackTransaction() override;
 
  private:
   std::unique_ptr<ConnectionImpl> impl_;
 };
 
-}  // namespace cpp_utils::database
+}  // namespace cpputils::database
 
 #endif  // CPP_UTILS_DATABASE_DETAIL_CONNECTION_IMPL_HPP_

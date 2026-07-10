@@ -5,7 +5,7 @@
 
 #include <memory>
 
-namespace cpp_utils::database {
+namespace cpputils::database {
 
 struct PoolState;
 
@@ -20,9 +20,9 @@ class ConnectionPool final : public IConnectionPool {
  private:
   std::shared_ptr<PoolState> state_;
   bool opened_ = false;
-  DbError last_error_;
+  DatabaseError last_error_;
 };
 
-}  // namespace cpp_utils::database
+}  // namespace cpputils::database
 
 #endif  // CPP_UTILS_DATABASE_DETAIL_CONNECTION_POOL_IMPL_HPP_

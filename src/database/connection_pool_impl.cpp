@@ -1,17 +1,16 @@
-#include "src/database/detail/connection_pool_impl.hpp"
+#include "src/database/connection_pool_impl.hpp"
 
-#include <cpputils/database/types.hpp>
-#include "src/database/detail/soci_helper.hpp"
-#include "src/database/detail/transaction_impl.hpp"
+#include "src/database/soci_helper.hpp"
+#include "src/database/transaction_impl.hpp"
+#include <cpputils/database/database_types.hpp>
 
 #include <soci/connection-pool.h>
 #include <soci/soci.h>
 
 #include <memory>
-#include <optional>
 #include <utility>
 
-namespace cpp_utils::database {
+namespace cpputils::database {
 
 struct PoolState {
   ConnectionPoolConfig config;
@@ -24,9 +23,13 @@ namespace {
 class LeasedConnection final : public IConnection {
  public:
   LeasedConnection(std::shared_ptr<PoolState> state, std::size_t pos)
-    : state_(std::move(state)), pos_(pos), valid_(true) {}
+    : state_(std::move(state)),
+      pos_(pos),
+      valid_(true),
+      transaction_(last_error_, state_->config.connection.database_type) {}
 
   ~LeasedConnection() override {
+    transaction_.RollbackIfActive();
     if (valid_ && state_ && state_->pool) {
       try {
         state_->pool->give_back(pos_);
@@ -35,18 +38,21 @@ class LeasedConnection final : public IConnection {
     }
   }
 
-  bool Connect() override { return IsConnected(); }
+  bool Connect() override {
+    return IsConnected();
+  }
 
-  void Disconnect() override { valid_ = false; }
-
-  bool IsConnected() const override { return valid_ && state_ && state_->pool; }
+  bool IsConnected() const override {
+    return valid_ && state_ && state_->pool;
+  }
 
   bool Execute(const std::string& sql, std::int64_t* affected_rows) override {
     if (!IsConnected()) {
       detail::SetDbErrorMessage(last_error_, state_->config.connection.database_type, "leased connection is invalid");
       return false;
     }
-    return detail::ExecuteSql(state_->pool->at(pos_), sql, affected_rows, last_error_, state_->config.connection.database_type);
+    return detail::ExecuteSql(
+      state_->pool->at(pos_), sql, affected_rows, last_error_, state_->config.connection.database_type);
   }
 
   std::unique_ptr<IResultSet> Query(const std::string& sql) override {
@@ -57,35 +63,37 @@ class LeasedConnection final : public IConnection {
     return detail::QuerySql(state_->pool->at(pos_), sql, last_error_, state_->config.connection.database_type);
   }
 
-  const DbError& LastError() const override { return last_error_; }
-
-  std::optional<Transaction> BeginTransaction() override {
-    if (!IsConnected()) {
-      detail::SetDbErrorMessage(last_error_, state_->config.connection.database_type, "leased connection is invalid");
-      return std::nullopt;
-    }
-    try {
-      auto tx_impl = std::make_unique<detail::TransactionImpl>(state_->pool->at(pos_));
-      return Transaction(this, std::move(tx_impl));
-    } catch (const soci::soci_error& ex) {
-      detail::SetDbErrorFromSoci(last_error_, state_->config.connection.database_type, ex);
-      return std::nullopt;
-    }
+  const DatabaseError& LastError() const override {
+    return last_error_;
   }
 
- protected:
-  void SetLastError(DbError error) override {
-    if (error.database_type == DatabaseType::kUnknown && state_) {
-      error.database_type = state_->config.connection.database_type;
+  bool BeginTransaction() override {
+    if (!IsConnected()) {
+      detail::SetDbErrorMessage(last_error_, state_->config.connection.database_type, "leased connection is invalid");
+      return false;
     }
-    last_error_ = std::move(error);
+    return transaction_.Begin(state_->pool->at(pos_));
+  }
+
+  bool CommitTransaction() override {
+    return transaction_.Commit();
+  }
+
+  bool RollbackTransaction() override {
+    return transaction_.Rollback();
+  }
+
+  void Disconnect() override {
+    transaction_.RollbackIfActive();
+    valid_ = false;
   }
 
  private:
   std::shared_ptr<PoolState> state_;
   std::size_t pos_ = 0;
   bool valid_ = false;
-  DbError last_error_;
+  DatabaseError last_error_;
+  detail::Transaction transaction_;
 };
 
 }  // namespace
@@ -127,7 +135,9 @@ void ConnectionPool::Close() noexcept {
   state_.reset();
 }
 
-bool ConnectionPool::IsOpen() const { return opened_ && state_ != nullptr; }
+bool ConnectionPool::IsOpen() const {
+  return opened_ && state_ != nullptr;
+}
 
 std::unique_ptr<IConnection> ConnectionPool::Acquire() {
   if (!IsOpen()) {
@@ -155,6 +165,8 @@ std::unique_ptr<IConnection> ConnectionPool::Acquire() {
   }
 }
 
-std::unique_ptr<IConnectionPool> CreateConnectionPool() { return std::make_unique<ConnectionPool>(); }
+std::unique_ptr<IConnectionPool> CreateConnectionPool() {
+  return std::make_unique<ConnectionPool>();
+}
 
-}  // namespace cpp_utils::database
+}  // namespace cpputils::database

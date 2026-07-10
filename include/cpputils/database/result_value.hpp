@@ -1,20 +1,20 @@
-/// @file      value.hpp
-/// @brief     数据库单元格值的类型擦除表示
+/// @file      result_value.hpp
+/// @brief     查询结果单元格值的类型擦除表示
 /// @details   公共 API 不暴露 SOCI 类型；类型转换统一使用 as_xxx
 /// @author    wengjianhong
 /// @date      2026-06-28
 /// @copyright CC BY-NC-SA 4.0
-#ifndef CPP_UTILS_DATABASE_VALUE_HPP_
-#define CPP_UTILS_DATABASE_VALUE_HPP_
+#ifndef CPP_UTILS_DATABASE_RESULT_VALUE_HPP_
+#define CPP_UTILS_DATABASE_RESULT_VALUE_HPP_
 
 #include <cstdint>
 #include <optional>
 #include <string>
 
-namespace cpp_utils::database {
+namespace cpputils::database {
 
-/// @brief 单元格值（tagged union）
-struct Value {
+/// @brief 单元格值（tagged union，值语义）
+struct ResultValue {
   /// @brief 值类型标签
   enum class Type {
     ///< SQL NULL
@@ -53,6 +53,6 @@ struct Value {
   [[nodiscard]] std::optional<std::string> as_string() const;
 };
 
-}  // namespace cpp_utils::database
+}  // namespace cpputils::database
 
-#endif  // CPP_UTILS_DATABASE_VALUE_HPP_
+#endif  // CPP_UTILS_DATABASE_RESULT_VALUE_HPP_

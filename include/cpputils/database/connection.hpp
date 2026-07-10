@@ -8,21 +8,17 @@
 #define CPP_UTILS_DATABASE_CONNECTION_HPP_
 
 #include <cpputils/database/config.hpp>
-#include <cpputils/database/error.hpp>
+#include <cpputils/database/database_error.hpp>
 #include <cpputils/database/result_set.hpp>
-#include <cpputils/database/transaction.hpp>
 
 #include <cstdint>
 #include <memory>
-#include <optional>
 #include <string>
 
-namespace cpp_utils::database {
+namespace cpputils::database {
 
 /// @brief 数据库连接抽象（便于 mock / 连接池借还）
 class IConnection {
-  friend class Transaction;
-
  public:
   virtual ~IConnection() = default;
 
@@ -39,7 +35,7 @@ class IConnection {
 
   /// @brief 最近一次操作的错误详情
   /// @return 错误详情引用；无错误时 Ok() 为 true
-  [[nodiscard]] virtual const DbError& LastError() const = 0;
+  [[nodiscard]] virtual const DatabaseError& LastError() const = 0;
 
   /// @brief 流式查询，返回结果集供逐行 Fetch
   /// @param sql SQL 语句
@@ -52,14 +48,17 @@ class IConnection {
   /// @return true 表示成功；失败时见 LastError()
   [[nodiscard]] virtual bool Execute(const std::string& sql, std::int64_t* affected_rows = nullptr) = 0;
 
-  /// @brief 开启事务
-  /// @return 成功时事务句柄；失败时 nullopt，见 LastError()
-  [[nodiscard]] virtual std::optional<Transaction> BeginTransaction() = 0;
+  /// @brief 开启事务（同一连接同时仅允许一个活跃事务）
+  /// @return true 表示成功；失败时见 LastError()
+  [[nodiscard]] virtual bool BeginTransaction() = 0;
 
- protected:
-  /// @brief 设置最近一次错误详情
-  /// @param error 错误详情
-  virtual void SetLastError(DbError error) = 0;
+  /// @brief 提交当前事务
+  /// @return true 表示成功；无活跃事务或失败时见 LastError()
+  [[nodiscard]] virtual bool CommitTransaction() = 0;
+
+  /// @brief 回滚当前事务
+  /// @return true 表示成功；无活跃事务时返回 true
+  [[nodiscard]] virtual bool RollbackTransaction() = 0;
 };
 
 /// @brief 创建默认 SOCI 单连接实现
@@ -67,6 +66,6 @@ class IConnection {
 /// @return 未 Connect 的连接对象
 [[nodiscard]] std::unique_ptr<IConnection> CreateConnection(ConnectionConfig config);
 
-}  // namespace cpp_utils::database
+}  // namespace cpputils::database
 
 #endif  // CPP_UTILS_DATABASE_CONNECTION_HPP_

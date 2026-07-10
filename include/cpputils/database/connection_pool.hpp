@@ -11,7 +11,7 @@
 
 #include <memory>
 
-namespace cpp_utils::database {
+namespace cpputils::database {
 
 /// @brief 连接池抽象
 class IConnectionPool {
@@ -39,6 +39,6 @@ class IConnectionPool {
 /// @return 连接池 unique_ptr
 [[nodiscard]] std::unique_ptr<IConnectionPool> CreateConnectionPool();
 
-}  // namespace cpp_utils::database
+}  // namespace cpputils::database
 
 #endif  // CPP_UTILS_DATABASE_CONNECTION_POOL_HPP_

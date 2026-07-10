@@ -6,14 +6,14 @@
 
 namespace {
 
-std::string BuildConnString(const cpp_utils::database::SqliteConfig& config) {
+std::string BuildConnString(const cpputils::database::SqliteConfig& config) {
   if (config.database_path == ":memory:") {
     return ":memory:";
   }
   return "dbname=" + config.database_path;
 }
 
-std::string BuildConnString(const cpp_utils::database::MySqlConfig& config) {
+std::string BuildConnString(const cpputils::database::MySqlConfig& config) {
   std::ostringstream ss;
   ss << "host=" << config.host << " port=" << config.port << " db=" << config.database_name << " user=" << config.user
      << " password=" << config.password;
@@ -23,9 +23,9 @@ std::string BuildConnString(const cpp_utils::database::MySqlConfig& config) {
   return ss.str();
 }
 
-std::string BuildConnString(const cpp_utils::database::PostgreSqlConfig& config) {
+std::string BuildConnString(const cpputils::database::PostgreSqlConfig& config) {
   std::ostringstream ss;
-  if (config.connection_type == cpp_utils::database::PostgreSqlConnectionType::kUnix) {
+  if (config.connection_type == cpputils::database::ConnectionType::kUnix) {
     ss << "host=" << config.socket_path << " port=" << config.port << " ";
   } else {
     ss << "host=" << config.host << " port=" << config.port << " ";
@@ -48,7 +48,7 @@ std::string BuildConnString(const cpp_utils::database::PostgreSqlConfig& config)
   return ss.str();
 }
 
-std::string BuildConnString(const cpp_utils::database::OracleConfig& config) {
+std::string BuildConnString(const cpputils::database::OracleConfig& config) {
   std::ostringstream ss;
   ss << "host=" << config.host << " port=" << config.port << " service=" << config.service_name
      << " user=" << config.user << " password=" << config.password;
@@ -60,7 +60,7 @@ std::string BuildConnString(const cpp_utils::database::OracleConfig& config) {
 
 }  // namespace
 
-namespace cpp_utils::database {
+namespace cpputils::database {
 
 ConnectionConfig::ConnectionConfig(const SqliteConfig& config)
   : database_type(DatabaseType::kSqlite3), conn_string(BuildConnString(config)), soci_options(config.soci_options) {
@@ -83,4 +83,4 @@ ConnectionPoolConfig::ConnectionPoolConfig(ConnectionConfig connection) : connec
 ConnectionPoolConfig::ConnectionPoolConfig(ConnectionConfig connection, std::size_t pool_size)
   : pool_size(pool_size), connection(std::move(connection)) {}
 
-}  // namespace cpp_utils::database
+}  // namespace cpputils::database

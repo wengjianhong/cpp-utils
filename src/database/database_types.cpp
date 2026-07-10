@@ -1,6 +1,6 @@
-#include <cpputils/database/types.hpp>
+#include <cpputils/database/database_types.hpp>
 
-namespace cpp_utils::database {
+namespace cpputils::database {
 
 std::string_view GetDatabaseTypeName(DatabaseType type) noexcept {
   switch (type) {
@@ -20,4 +20,4 @@ std::string_view GetDatabaseTypeName(DatabaseType type) noexcept {
   return "";
 }
 
-}  // namespace cpp_utils::database
+}  // namespace cpputils::database

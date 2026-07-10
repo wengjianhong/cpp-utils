@@ -1,20 +1,20 @@
-/// @file      error.hpp
+/// @file      database_error.hpp
 /// @brief     数据库错误详情（SOCI / 驱动原文，不含自定义错误码）
 /// @details   cpputils 仅透传底层错误信息；成败由 API 返回值（bool / optional / nullptr）表达
 /// @author    wengjianhong
 /// @date      2026-07-09
 /// @copyright CC BY-NC-SA 4.0
-#ifndef CPP_UTILS_DATABASE_ERROR_HPP_
-#define CPP_UTILS_DATABASE_ERROR_HPP_
+#ifndef CPP_UTILS_DATABASE_DATABASE_ERROR_HPP_
+#define CPP_UTILS_DATABASE_DATABASE_ERROR_HPP_
 
-#include <cpputils/database/types.hpp>
+#include <cpputils/database/database_types.hpp>
 
 #include <string>
 
-namespace cpp_utils::database {
+namespace cpputils::database {
 
 /// @brief 数据库操作错误详情
-struct DbError {
+struct DatabaseError {
   ///< 驱动原生错误码；0 表示无
   int native_code = 0;
   ///< 数据库类型
@@ -31,6 +31,6 @@ struct DbError {
   void Clear() noexcept;
 };
 
-}  // namespace cpp_utils::database
+}  // namespace cpputils::database
 
-#endif  // CPP_UTILS_DATABASE_ERROR_HPP_
+#endif  // CPP_UTILS_DATABASE_DATABASE_ERROR_HPP_

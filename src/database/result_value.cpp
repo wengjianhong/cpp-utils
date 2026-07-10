@@ -1,19 +1,19 @@
-#include <cpputils/database/value.hpp>
+#include <cpputils/database/result_value.hpp>
 
-namespace cpp_utils::database {
+namespace cpputils::database {
 
-bool Value::is_null() const {
+bool ResultValue::is_null() const {
   return type == Type::kNull;
 }
 
-std::optional<std::int64_t> Value::as_int64() const {
+std::optional<std::int64_t> ResultValue::as_int64() const {
   if (type == Type::kInt64) {
     return int64_value;
   }
   return std::nullopt;
 }
 
-std::optional<double> Value::as_double() const {
+std::optional<double> ResultValue::as_double() const {
   if (is_null()) {
     return std::nullopt;
   }
@@ -26,7 +26,7 @@ std::optional<double> Value::as_double() const {
   return std::nullopt;
 }
 
-std::optional<std::string> Value::as_string() const {
+std::optional<std::string> ResultValue::as_string() const {
   if (type == Type::kString) {
     return string_value;
   }
@@ -39,4 +39,4 @@ std::optional<std::string> Value::as_string() const {
   return std::nullopt;
 }
 
-}  // namespace cpp_utils::database
+}  // namespace cpputils::database

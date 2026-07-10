@@ -14,7 +14,7 @@
 #include <stdexcept>
 #include <utility>
 
-namespace cpp_utils {
+namespace cpputils {
 
 /// @brief 线程安全队列，底层 deque + mutex + condition_variable
 /// @tparam T 元素类型
@@ -113,6 +113,6 @@ class SafeQueue {
   std::deque<T> data_;          ///< 底层存储
 };
 
-}  // namespace cpp_utils
+}  // namespace cpputils
 
 #endif  // BASE_COMMON_SAFE_QUEUE_H_

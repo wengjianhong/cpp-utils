@@ -6,7 +6,7 @@
 #include <iostream>
 #include <vector>
 
-using namespace cpp_utils;
+using namespace cpputils;
 using namespace std::chrono_literals;
 
 // 基本功能测试

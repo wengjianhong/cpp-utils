@@ -5,7 +5,7 @@
 #include <thread>
 #include <vector>
 
-using namespace cpp_utils;
+using namespace cpputils;
 
 // 基本功能测试
 TEST(SafeQueueTest, BasicOperations) {
