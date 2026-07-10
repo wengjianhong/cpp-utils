@@ -15,7 +15,7 @@
 
 namespace cpputils::database {
 
-/// @brief PostgreSQL 连接方式
+/// @brief 连接方式
 enum class ConnectionType {
   ///< TCP
   kTcp = 0,
