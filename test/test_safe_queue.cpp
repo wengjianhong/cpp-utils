@@ -1,11 +1,12 @@
 #include <cpputils/safe_queue.hpp>
 
-#include <atomic>
 #include <gtest/gtest.h>
+
+#include <atomic>
 #include <thread>
 #include <vector>
 
-using namespace cpp_utils;
+using namespace cpputils;
 
 // 基本功能测试
 TEST(SafeQueueTest, BasicOperations) {

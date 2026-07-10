@@ -8,6 +8,7 @@
 #define BASE_COMMON_THREAD_POOL_THREAD_POOL_H_
 
 #include <cpputils/safe_queue.hpp>
+
 #include <atomic>
 #include <cerrno>
 #include <condition_variable>
@@ -21,7 +22,7 @@
 #include <type_traits>
 #include <vector>
 
-namespace cpp_utils {
+namespace cpputils {
 
 /// @brief 线程池：基于 SafeQueue 提交任务，支持阻塞等待与优雅停止
 class ThreadPool : public std::enable_shared_from_this<ThreadPool> {
@@ -41,7 +42,9 @@ class ThreadPool : public std::enable_shared_from_this<ThreadPool> {
   }
 
   /// @brief 析构并 stop(true)，确保已提交任务执行完毕
-  ~ThreadPool() { stop(true); }
+  ~ThreadPool() {
+    stop(true);
+  }
 
   /// @brief 提交任务并返回 future 获取异步结果
   /// @tparam F 可调用对象类型
@@ -91,11 +94,15 @@ class ThreadPool : public std::enable_shared_from_this<ThreadPool> {
 
   /// @brief 获取当前未完成任务数（含已出队未执行）
   /// @return 近似任务计数
-  size_t pending_tasks() const { return task_count_.load(std::memory_order_acquire); }
+  size_t pending_tasks() const {
+    return task_count_.load(std::memory_order_acquire);
+  }
 
   /// @brief 获取工作线程数量
   /// @return 线程数
-  size_t thread_count() const { return threads_.size(); }
+  size_t thread_count() const {
+    return threads_.size();
+  }
 
   /// @brief 停止线程池并 join 工作线程
   /// @param wait_for_completion true 时等待队列中任务执行完毕；false 时清空未执行任务
@@ -122,7 +129,9 @@ class ThreadPool : public std::enable_shared_from_this<ThreadPool> {
 
   /// @brief 线程池是否处于运行状态
   /// @return true 表示可继续 submit
-  bool is_running() const { return is_running_.load(std::memory_order_acquire); }
+  bool is_running() const {
+    return is_running_.load(std::memory_order_acquire);
+  }
 
  private:
   /// @brief 私有构造，仅允许 create() 创建
@@ -184,6 +193,6 @@ class ThreadPool : public std::enable_shared_from_this<ThreadPool> {
   std::vector<std::thread> threads_;             ///< 工作线程列表
   SafeQueue<std::function<void()>> task_queue_;  ///< 任务队列
 };
-}  // namespace cpp_utils
+}  // namespace cpputils
 
 #endif  // BASE_COMMON_THREAD_POOL_THREAD_POOL_H_

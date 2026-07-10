@@ -8,11 +8,10 @@
 
 #include <cpputils/database/config.hpp>
 #include <cpputils/database/connection.hpp>
-#include <cpputils/database/error.hpp>
 
 #include <memory>
 
-namespace cpp_utils::database {
+namespace cpputils::database {
 
 /// @brief 连接池抽象
 class IConnectionPool {
@@ -27,9 +26,9 @@ class IConnectionPool {
   [[nodiscard]] virtual bool IsOpen() const = 0;
 
   /// @brief 按配置打开连接池
-  /// @param options 连接池参数（connection + pool_size）
-  /// @return kSuccess 表示成功
-  [[nodiscard]] virtual Error Open(const ConnectionPoolOptions& options) = 0;
+  /// @param config 连接池配置（connection + pool_size）
+  /// @return true 表示成功；失败时见连接 LastError()（池本身无 LastError 接口）
+  [[nodiscard]] virtual bool Open(const ConnectionPoolConfig& config) = 0;
 
   /// @brief 借出连接；unique_ptr 析构时自动归还
   /// @return 可用连接；池未打开或耗尽时返回 nullptr
@@ -40,6 +39,6 @@ class IConnectionPool {
 /// @return 连接池 unique_ptr
 [[nodiscard]] std::unique_ptr<IConnectionPool> CreateConnectionPool();
 
-}  // namespace cpp_utils::database
+}  // namespace cpputils::database
 
 #endif  // CPP_UTILS_DATABASE_CONNECTION_POOL_HPP_

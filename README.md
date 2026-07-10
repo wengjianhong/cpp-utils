@@ -21,7 +21,7 @@ cd cpputils
 
 # 编译安装
 cmake -B build
-cmake --build build -j
+cmake --build build -j $(($(nproc)/4))
 sudo cmake --install build
 sudo ldconfig
 ```
@@ -40,7 +40,7 @@ sudo ldconfig
 ```shell
 # 编译安装
 cmake -B build -DCMAKE_INSTALL_PREFIX=/usr/local/cpputils
-cmake --build build -j
+cmake --build build -j $(($(nproc)/4))
 sudo cmake --install build
 
 # 配置ldconfig，注册运行期库路径
