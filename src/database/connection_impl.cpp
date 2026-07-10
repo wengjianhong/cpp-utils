@@ -7,6 +7,7 @@
 
 #include "src/database/soci_helper.hpp"
 #include "src/database/transaction_impl.hpp"
+
 #include <cpputils/database/database_types.hpp>
 
 #include <soci/soci.h>

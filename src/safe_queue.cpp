@@ -1,6 +1,6 @@
-#include <string>
-
 #include <cpputils/safe_queue.hpp>
+
+#include <string>
 
 namespace cpputils {
 // 模板类的显式实例化声明，用于分离编译

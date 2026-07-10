@@ -1,7 +1,8 @@
 #include <cpputils/safe_queue.hpp>
 
-#include <atomic>
 #include <gtest/gtest.h>
+
+#include <atomic>
 #include <thread>
 #include <vector>
 

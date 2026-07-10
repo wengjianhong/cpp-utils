@@ -1,8 +1,9 @@
 #include <cpputils/thread_pool.hpp>
 
+#include <gtest/gtest.h>
+
 #include <atomic>
 #include <future>
-#include <gtest/gtest.h>
 #include <iostream>
 #include <vector>
 
