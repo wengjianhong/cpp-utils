@@ -26,7 +26,7 @@ class ResultHeaderImpl final : public IResultHeader {
   /// @return 列个数
   [[nodiscard]] std::size_t size() const override;
 
-  std::vector<std::string> names;                              ///< 列名列表，下标即列索引
+  std::vector<std::string> names;                                   ///< 列名列表，下标即列索引
   std::unordered_map<std::string_view, std::size_t> name_to_index;  ///< 列名 -> 索引
 };
 

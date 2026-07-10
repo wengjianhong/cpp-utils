@@ -44,7 +44,7 @@ class ResultRowImpl final : public IResultRow {
   [[nodiscard]] std::optional<std::size_t> ResolveIndex(std::string_view name) const;
 
   std::shared_ptr<const IResultHeader> header_;  ///< 列元数据
-  std::vector<ResultValue> values_;            ///< 列值
+  std::vector<ResultValue> values_;              ///< 列值
 };
 
 }  // namespace cpputils::database::detail

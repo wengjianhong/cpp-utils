@@ -36,8 +36,8 @@ class ConnectionPool final : public IConnectionPool {
 
  private:
   std::shared_ptr<PoolState> state_;  ///< 共享池状态（供 LeasedConnection 归还）
-  bool opened_ = false;             ///< 是否已成功 Open
-  DatabaseError last_error_;        ///< Open/Acquire 失败时的错误详情
+  bool opened_ = false;               ///< 是否已成功 Open
+  DatabaseError last_error_;          ///< Open/Acquire 失败时的错误详情
 };
 
 }  // namespace cpputils::database

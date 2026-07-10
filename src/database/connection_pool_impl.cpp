@@ -19,9 +19,9 @@ namespace cpputils::database {
 
 /// @brief 连接池共享状态（参数、底层 pool）
 struct PoolState {
-  ConnectionPoolConfig config;                         ///< 池配置
-  std::unique_ptr<soci::connection_parameters> params; ///< SOCI 连接参数
-  std::unique_ptr<soci::connection_pool> pool;         ///< SOCI 连接池
+  ConnectionPoolConfig config;                          ///< 池配置
+  std::unique_ptr<soci::connection_parameters> params;  ///< SOCI 连接参数
+  std::unique_ptr<soci::connection_pool> pool;          ///< SOCI 连接池
 };
 
 namespace {

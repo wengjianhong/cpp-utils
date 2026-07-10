@@ -23,10 +23,10 @@ class ConnectionImpl {
   explicit ConnectionImpl(ConnectionConfig config)
     : config_(std::move(config)), transaction_(last_error_, config_.database_type) {}
 
-  ConnectionConfig config_;                  ///< 连接配置
-  std::unique_ptr<soci::session> session_;   ///< SOCI 会话；未连接时为 nullptr
-  DatabaseError last_error_;                 ///< 最近一次操作错误
-  detail::Transaction transaction_;          ///< 事务状态
+  ConnectionConfig config_;                 ///< 连接配置
+  std::unique_ptr<soci::session> session_;  ///< SOCI 会话；未连接时为 nullptr
+  DatabaseError last_error_;                ///< 最近一次操作错误
+  detail::Transaction transaction_;         ///< 事务状态
 };
 
 Connection::Connection(ConnectionConfig config) : impl_(std::make_unique<ConnectionImpl>(std::move(config))) {}
