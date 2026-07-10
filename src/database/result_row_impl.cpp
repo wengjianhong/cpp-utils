@@ -1,3 +1,8 @@
+/// @file      result_row_impl.cpp
+/// @brief     IResultRow SOCI 实现
+/// @author    wengjianhong
+/// @date      2026-06-28
+/// @copyright CC BY-NC-SA 4.0
 #include "src/database/result_row_impl.hpp"
 
 #include <cpputils/database/result_header.hpp>

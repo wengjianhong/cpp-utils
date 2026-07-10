@@ -1,3 +1,8 @@
+/// @file      transaction_impl.cpp
+/// @brief     SOCI 事务封装实现
+/// @author    wengjianhong
+/// @date      2026-06-28
+/// @copyright CC BY-NC-SA 4.0
 #include "src/database/transaction_impl.hpp"
 
 #include "src/database/soci_helper.hpp"
@@ -6,6 +11,8 @@ namespace cpputils::database::detail {
 
 Transaction::Transaction(DatabaseError& last_error, DatabaseType database_type)
   : last_error_(last_error), database_type_(database_type) {}
+
+Transaction::Impl::Impl(soci::session& session) : transaction(session) {}
 
 bool Transaction::Begin(soci::session& session) {
   if (impl_ != nullptr) {

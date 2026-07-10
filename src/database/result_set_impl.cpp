@@ -1,3 +1,8 @@
+/// @file      result_set_impl.cpp
+/// @brief     IResultSet SOCI 流式实现
+/// @author    wengjianhong
+/// @date      2026-06-28
+/// @copyright CC BY-NC-SA 4.0
 #include "src/database/result_set_impl.hpp"
 #include "src/database/result_header_impl.hpp"
 #include "src/database/result_row_impl.hpp"
@@ -23,10 +28,13 @@ std::optional<std::unique_ptr<IResultRow>> SociResultSet::Fetch() {
   }
 
   const soci::row& srow = *it_;
+
+  // 1. 首行时懒构建 header
   if (!header_) {
     header_ = BuildResultHeader(srow);
   }
 
+  // 2. 转换列值并推进迭代器
   std::vector<ResultValue> values;
   values.reserve(srow.size());
   for (std::size_t i = 0; i < srow.size(); ++i) {

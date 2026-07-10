@@ -1,3 +1,8 @@
+/// @file      soci_helper.cpp
+/// @brief     SOCI 转换与 Execute/Query 辅助实现
+/// @author    wengjianhong
+/// @date      2026-06-28
+/// @copyright CC BY-NC-SA 4.0
 #include "src/database/soci_helper.hpp"
 
 #include "src/database/result_header_impl.hpp"

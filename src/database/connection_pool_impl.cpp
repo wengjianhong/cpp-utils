@@ -1,3 +1,8 @@
+/// @file      connection_pool_impl.cpp
+/// @brief     IConnectionPool SOCI 实现
+/// @author    wengjianhong
+/// @date      2026-06-28
+/// @copyright CC BY-NC-SA 4.0
 #include "src/database/connection_pool_impl.hpp"
 
 #include "src/database/soci_helper.hpp"
@@ -12,16 +17,21 @@
 
 namespace cpputils::database {
 
+/// @brief 连接池共享状态（参数、底层 pool）
 struct PoolState {
-  ConnectionPoolConfig config;
-  std::unique_ptr<soci::connection_parameters> params;
-  std::unique_ptr<soci::connection_pool> pool;
+  ConnectionPoolConfig config;                         ///< 池配置
+  std::unique_ptr<soci::connection_parameters> params; ///< SOCI 连接参数
+  std::unique_ptr<soci::connection_pool> pool;         ///< SOCI 连接池
 };
 
 namespace {
 
+/// @brief 从池中借出的连接包装（析构时自动 give_back）
 class LeasedConnection final : public IConnection {
  public:
+  /// @brief 构造借出连接
+  /// @param state 共享池状态
+  /// @param pos 池中槽位下标
   LeasedConnection(std::shared_ptr<PoolState> state, std::size_t pos)
     : state_(std::move(state)),
       pos_(pos),
@@ -89,21 +99,23 @@ class LeasedConnection final : public IConnection {
   }
 
  private:
-  std::shared_ptr<PoolState> state_;
-  std::size_t pos_ = 0;
-  bool valid_ = false;
-  DatabaseError last_error_;
-  detail::Transaction transaction_;
+  std::shared_ptr<PoolState> state_;  ///< 共享池状态
+  std::size_t pos_ = 0;               ///< 池中槽位
+  bool valid_ = false;                ///< 是否仍可操作
+  DatabaseError last_error_;          ///< 最近一次操作错误
+  detail::Transaction transaction_;   ///< 事务状态
 };
 
 }  // namespace
 
 bool ConnectionPool::Open(const ConnectionPoolConfig& config) {
+  // 1. 校验配置
   if (config.connection.conn_string.empty() || config.pool_size == 0) {
     detail::SetDbErrorMessage(last_error_, config.connection.database_type, "invalid connection pool config");
     return false;
   }
 
+  // 2. 创建 SOCI 连接池并预打开所有 session
   try {
     auto state = std::make_shared<PoolState>();
     state->config = config;
@@ -144,6 +156,7 @@ std::unique_ptr<IConnection> ConnectionPool::Acquire() {
     return nullptr;
   }
 
+  // 1. 尝试借出槽位（带超时）
   std::size_t pos = 0;
   const unsigned int lease_timeout_ms =
     state_->config.lease_timeout > 0 ? static_cast<unsigned int>(state_->config.lease_timeout * 1000) : 0;
@@ -152,6 +165,7 @@ std::unique_ptr<IConnection> ConnectionPool::Acquire() {
     return nullptr;
   }
 
+  // 2. 确保 session 已连接并返回 LeasedConnection
   try {
     soci::session& session = state_->pool->at(pos);
     if (!session.is_connected()) {

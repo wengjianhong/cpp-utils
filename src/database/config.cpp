@@ -1,3 +1,8 @@
+/// @file      config.cpp
+/// @brief     ConnectionConfig / ConnectionPoolConfig 构造与 conn_string 构建
+/// @author    wengjianhong
+/// @date      2026-06-28
+/// @copyright CC BY-NC-SA 4.0
 #include <cpputils/database/config.hpp>
 
 #include <sstream>
@@ -6,6 +11,9 @@
 
 namespace {
 
+/// @brief 由 SQLite 配置构建 SOCI 连接串
+/// @param config SQLite 配置
+/// @return SOCI conn_string
 std::string BuildConnString(const cpputils::database::SqliteConfig& config) {
   if (config.database_path == ":memory:") {
     return ":memory:";
@@ -13,6 +21,9 @@ std::string BuildConnString(const cpputils::database::SqliteConfig& config) {
   return "dbname=" + config.database_path;
 }
 
+/// @brief 由 MySQL 配置构建 SOCI 连接串
+/// @param config MySQL 配置
+/// @return SOCI conn_string
 std::string BuildConnString(const cpputils::database::MySqlConfig& config) {
   std::ostringstream ss;
   ss << "host=" << config.host << " port=" << config.port << " db=" << config.database_name << " user=" << config.user
@@ -23,6 +34,9 @@ std::string BuildConnString(const cpputils::database::MySqlConfig& config) {
   return ss.str();
 }
 
+/// @brief 由 PostgreSQL 配置构建 SOCI 连接串
+/// @param config PostgreSQL 配置
+/// @return SOCI conn_string
 std::string BuildConnString(const cpputils::database::PostgreSqlConfig& config) {
   std::ostringstream ss;
   if (config.connection_type == cpputils::database::ConnectionType::kUnix) {
@@ -48,6 +62,9 @@ std::string BuildConnString(const cpputils::database::PostgreSqlConfig& config) 
   return ss.str();
 }
 
+/// @brief 由 Oracle 配置构建 SOCI 连接串
+/// @param config Oracle 配置
+/// @return SOCI conn_string
 std::string BuildConnString(const cpputils::database::OracleConfig& config) {
   std::ostringstream ss;
   ss << "host=" << config.host << " port=" << config.port << " service=" << config.service_name

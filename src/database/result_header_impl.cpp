@@ -1,3 +1,8 @@
+/// @file      result_header_impl.cpp
+/// @brief     IResultHeader SOCI 实现
+/// @author    wengjianhong
+/// @date      2026-06-28
+/// @copyright CC BY-NC-SA 4.0
 #include "src/database/result_header_impl.hpp"
 
 namespace cpputils::database::detail {

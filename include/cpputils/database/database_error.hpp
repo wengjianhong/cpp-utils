@@ -25,6 +25,7 @@ struct DatabaseError {
   std::string sqlstate;
 
   /// @brief 是否无错误
+  /// @return true 表示 native_code 为 0 且 message、sqlstate 均为空
   [[nodiscard]] bool Ok() const noexcept;
 
   /// @brief 重置为无错误状态

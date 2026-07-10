@@ -1,3 +1,8 @@
+/// @file      database_error.cpp
+/// @brief     DatabaseError 成员实现
+/// @author    wengjianhong
+/// @date      2026-07-09
+/// @copyright CC BY-NC-SA 4.0
 #include <cpputils/database/database_error.hpp>
 
 namespace cpputils::database {

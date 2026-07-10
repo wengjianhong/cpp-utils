@@ -21,9 +21,13 @@ class IResultRow {
   virtual ~IResultRow() = default;
 
   /// @brief 按下标读取单元格
+  /// @param index 列下标（从 0 起）
+  /// @return 单元格值；越界时 nullopt
   [[nodiscard]] virtual std::optional<ResultValue> get_value(std::size_t index) const = 0;
 
   /// @brief 按列名读取单元格
+  /// @param name 列名
+  /// @return 单元格值；列名不存在时 nullopt
   [[nodiscard]] virtual std::optional<ResultValue> get_value(std::string_view name) const = 0;
 };
 
