@@ -26,19 +26,20 @@ option(CPPUTILS_ENABLE_SOCI "Build SOCI database wrapper" ON)
 # -----------------------------------------------------------------------------
 # Library
 # -----------------------------------------------------------------------------
+set(CPPUTILS_SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
+
 file(GLOB_RECURSE CPPUTILS_SOURCES CONFIGURE_DEPENDS
-  "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp"
+  "${CPPUTILS_SRC_DIR}/cpputils/*.cpp"
 )
 
 add_library(cpputils SHARED ${CPPUTILS_SOURCES})
 
 # Public: #include <cpputils/...>
-# Private: src/ detail headers, compile-time only for this target
+# Private: src/ as root; internal refs use "cpputils/..." (e.g. cpputils/database/...)
 target_include_directories(cpputils
-  PUBLIC
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
-  PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}
+  PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  PUBLIC $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+  PRIVATE ${CPPUTILS_SRC_DIR}
 )
 
 find_package(Threads REQUIRED)

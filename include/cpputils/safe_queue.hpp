@@ -11,7 +11,6 @@
 #include <cstddef>
 #include <deque>
 #include <mutex>
-#include <stdexcept>
 #include <utility>
 
 namespace cpputils {

@@ -3,10 +3,10 @@
 /// @author    wengjianhong
 /// @date      2026-06-28
 /// @copyright CC BY-NC-SA 4.0
-#include "src/database/connection_pool_impl.hpp"
+#include "cpputils/database/connection_pool_impl.hpp"
 
-#include "src/database/soci_helper.hpp"
-#include "src/database/transaction_impl.hpp"
+#include "cpputils/database/soci_helper.hpp"
+#include "cpputils/database/transaction_impl.hpp"
 
 #include <cpputils/database/database_types.hpp>
 

@@ -3,11 +3,11 @@
 /// @author    wengjianhong
 /// @date      2026-06-28
 /// @copyright CC BY-NC-SA 4.0
-#include "src/database/result_set_impl.hpp"
+#include "cpputils/database/result_set_impl.hpp"
 
-#include "src/database/result_header_impl.hpp"
-#include "src/database/result_row_impl.hpp"
-#include "src/database/soci_helper.hpp"
+#include "cpputils/database/result_header_impl.hpp"
+#include "cpputils/database/result_row_impl.hpp"
+#include "cpputils/database/soci_helper.hpp"
 
 namespace cpputils::database::detail {
 
