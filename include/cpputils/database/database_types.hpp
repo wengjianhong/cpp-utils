@@ -28,8 +28,24 @@ enum class DatabaseType {
 
 /// @brief 获取 DatabaseType 对应的名称字符串
 /// @param type 数据库类型
-/// @return 类型名称（如 "mysql"、"sqlite3"）；未知值返回空字符串
-[[nodiscard]] std::string_view GetDatabaseTypeName(DatabaseType type) noexcept;
+/// @return 类型名称：
+/// - kUnknown: 空字符串
+/// - kMySql: "mysql"
+/// - kSqlite3: "sqlite3"
+/// - kPostgreSql: "postgresql"
+/// - kOracle: "oracle"
+/// - kOdbc: "odbc"
+[[nodiscard]] std::string_view GetDatabaseNameByType(DatabaseType type) noexcept;
+
+/// @brief 从配置字符串解析 DatabaseType
+/// @param name 类型名称：
+/// - "mysql": kMySql
+/// - "sqlite3": kSqlite3
+/// - "postgresql": kPostgreSql
+/// - "oracle": kOracle
+/// - "odbc": kOdbc
+/// - 未识别: kUnknown
+[[nodiscard]] DatabaseType GetDatabaseTypeByName(std::string_view name) noexcept;
 
 }  // namespace cpputils::database
 

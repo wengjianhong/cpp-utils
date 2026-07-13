@@ -121,7 +121,7 @@ bool ConnectionPool::Open(const ConnectionPoolConfig& config) {
     auto state = std::make_shared<PoolState>();
     state->config = config;
     state->params = std::make_unique<soci::connection_parameters>(
-      std::string(GetDatabaseTypeName(config.connection.database_type)), config.connection.conn_string);
+      std::string(GetDatabaseNameByType(config.connection.database_type)), config.connection.conn_string);
     for (const auto& [key, value] : config.connection.soci_options) {
       state->params->set_option(key.c_str(), value);
     }

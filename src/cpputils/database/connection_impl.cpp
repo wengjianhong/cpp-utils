@@ -51,7 +51,7 @@ bool Connection::Connect() {
   Disconnect();
 
   try {
-    impl_->session_ = std::make_unique<soci::session>(std::string(GetDatabaseTypeName(impl_->config_.database_type)),
+    impl_->session_ = std::make_unique<soci::session>(std::string(GetDatabaseNameByType(impl_->config_.database_type)),
                                                       impl_->config_.conn_string);
     impl_->last_error_.Clear();
     return true;
