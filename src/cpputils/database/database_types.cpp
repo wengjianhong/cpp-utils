@@ -7,7 +7,7 @@
 
 namespace cpputils::database {
 
-std::string_view GetDatabaseTypeName(DatabaseType type) noexcept {
+std::string_view GetDatabaseNameByType(DatabaseType type) noexcept {
   switch (type) {
     case DatabaseType::kUnknown:
       return "";
@@ -23,6 +23,25 @@ std::string_view GetDatabaseTypeName(DatabaseType type) noexcept {
       return "odbc";
   }
   return "";
+}
+
+DatabaseType GetDatabaseTypeByName(std::string_view name) noexcept {
+  if (name == "mysql") {
+    return DatabaseType::kMySql;
+  }
+  if (name == "sqlite3" || name == "sqlite") {
+    return DatabaseType::kSqlite3;
+  }
+  if (name == "postgresql" || name == "postgres") {
+    return DatabaseType::kPostgreSql;
+  }
+  if (name == "oracle") {
+    return DatabaseType::kOracle;
+  }
+  if (name == "odbc") {
+    return DatabaseType::kOdbc;
+  }
+  return DatabaseType::kUnknown;
 }
 
 }  // namespace cpputils::database
